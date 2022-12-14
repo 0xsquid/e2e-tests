@@ -2,6 +2,14 @@ import { ethers } from "ethers";
 import { ChainName, RouteData, Squid } from "@0xsquid/sdk";
 import { loadAsync } from "node-yaml-config";
 import { runAndValidateParams } from "./utils";
+import winston from "winston";
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "./logs/combined.log" }),
+  ],
+});
 
 async function main() {
   console.log(
@@ -31,6 +39,8 @@ async function main() {
     .parseUnits(config.usdc_amount_in_ethers, 6)
     .toString();
 
+  //const activeRoutes: string[] = [];
+
   //rpc and signer
   const srcProvider = new ethers.providers.JsonRpcProvider(avalanche_chain.rpc);
   const dstProvider = new ethers.providers.JsonRpcProvider(ethereum_chain.rpc);
@@ -52,6 +62,7 @@ async function main() {
     )!.address as string, //wavax
     slippage: config.slippage,
   };
+  logger.info(params);
 
   await runAndValidateParams(
     params,

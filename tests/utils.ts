@@ -70,8 +70,6 @@ export const runAndValidateParams = async (
     const { route } = await squidSdk.getRoute(params);
     routeData = route;
   } catch (error: any) {
-    //expect(error.errors).toBeUndefined();
-    //expect(error).toBeUndefined();
     console.log(error);
   }
 
