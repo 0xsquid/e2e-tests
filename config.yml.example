@@ -1,0 +1,15 @@
+# default config is always loaded, env config (eg testnet) is loaded using the argument passed into the loadAsync function
+default:
+  slippage: 20 # as a percentage 20 = 20%
+local:
+  api_url: "http://localhost:3000"
+  axlUsdcSymbol: "axlUSDC"
+  usdcSymbol: "USDC"
+  private_key: ""
+  usdc_amount_in_ethers: "25"
+testnet:
+  api_url: "http://testnet.api.0xsquid.com"
+  axlUsdcSymbol: "aUSDC"
+  usdcSymbol: "aUSDC"
+  private_key: ""
+  usdc_amount_in_ethers: "2"
