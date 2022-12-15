@@ -7,9 +7,11 @@ local:
   usdcSymbol: "USDC"
   private_key: ""
   usdc_amount_in_ethers: "25"
+  waitTime: 1000
 testnet:
-  api_url: "http://testnet.api.0xsquid.com"
+  api_url: "https://testnet.api.0xsquid.com"
   axlUsdcSymbol: "aUSDC"
   usdcSymbol: "aUSDC"
   private_key: ""
-  usdc_amount_in_ethers: "2"
+  usdc_amount_in_ethers: "1"
+  waitTime: 10000
