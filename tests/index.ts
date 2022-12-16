@@ -77,8 +77,6 @@ async function main() {
   let paramsArray = [
     {
       routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
-      srcRPC: polygon_chain.rpc,
-      dstRPC: avalanche_chain.rpc,
       toAddress: wallet.address,
       fromChain: polygon_chain.chainId,
       fromToken: squidSdk.tokens.find(
@@ -98,8 +96,6 @@ async function main() {
   //Ethereum
   paramsArray.push({
     routeDescription: "USDC on Ethereum to WAVAX on Avalanch",
-    srcRPC: ethereum_chain.rpc,
-    dstRPC: avalanche_chain.rpc,
     toAddress: wallet.address,
     fromChain: ethereum_chain.chainId,
     fromToken: squidSdk.tokens.find(
@@ -117,8 +113,6 @@ async function main() {
   //From Avalanche
   paramsArray.push({
     routeDescription: "USDC on Avalanche to WETH on Ethereum",
-    srcRPC: avalanche_chain.rpc,
-    dstRPC: ethereum_chain.rpc,
     toAddress: wallet.address,
     fromChain: avalanche_chain.chainId,
     fromToken: squidSdk.tokens.find(
@@ -137,8 +131,6 @@ async function main() {
   //From moonbeam
   paramsArray.push({
     routeDescription: "USDC on Moonbeam to WAVAX on Avalanche",
-    srcRPC: moonbeam_chain.rpc,
-    dstRPC: avalanche_chain.rpc,
     toAddress: wallet.address,
     fromChain: moonbeam_chain.chainId,
     fromToken: squidSdk.tokens.find(
@@ -185,7 +177,8 @@ async function main() {
       activeRoutes[index] = await getPostAccountValues(
         routeLog.params,
         config,
-        routeLog
+        routeLog,
+        squidSdk
       );
       routeLog.routeSwapsSuccess =
         routeLog.srcTokenBalancePre!.gt(routeLog.srcTokenBalancePost!) &&

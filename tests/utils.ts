@@ -4,8 +4,6 @@ import winston from "winston";
 
 export type RouteLog = {
   routeDescription?: string;
-  srcRPC?: string;
-  dstRPC?: string;
   txReceiptId?: string;
   srcTokenBalancePre?: BigNumber;
   srcTokenBalancePost?: BigNumber;
@@ -42,8 +40,15 @@ export const getPreAccountValuesAndExecute = async (
   squidSdk: Squid,
   logger: winston.Logger
 ) => {
-  const srcProvider = new ethers.providers.JsonRpcProvider(params.srcRPC);
-  const dstProvider = new ethers.providers.JsonRpcProvider(params.dstRPC);
+  const srcRPC = squidSdk.chains.find(
+    (chain) => chain.chainId == params.fromChain
+  )!.rpc;
+  const dstRPC = squidSdk.chains.find(
+    (chain) => chain.chainId == params.toChain
+  )!.rpc;
+
+  const srcProvider = new ethers.providers.JsonRpcProvider(srcRPC);
+  const dstProvider = new ethers.providers.JsonRpcProvider(dstRPC);
   const signer = new ethers.Wallet(config.private_key, srcProvider);
   //get before on src
   const srcTokenBalancePre = await getTokenBalance(
@@ -88,10 +93,17 @@ export const getPreAccountValuesAndExecute = async (
 export const getPostAccountValues = async (
   params: any,
   config: any,
-  routeLog: RouteLog
+  routeLog: RouteLog,
+  squidSdk: Squid
 ) => {
-  const srcProvider = new ethers.providers.JsonRpcProvider(params.srcRPC);
-  const dstProvider = new ethers.providers.JsonRpcProvider(params.dstRPC);
+  const srcRPC = squidSdk.chains.find(
+    (chain) => chain.chainId == params.fromChain
+  )!.rpc;
+  const dstRPC = squidSdk.chains.find(
+    (chain) => chain.chainId == params.toChain
+  )!.rpc;
+  const srcProvider = new ethers.providers.JsonRpcProvider(srcRPC);
+  const dstProvider = new ethers.providers.JsonRpcProvider(dstRPC);
   const signer = new ethers.Wallet(config.private_key, srcProvider);
   routeLog.srcTokenBalancePost = await getTokenBalance(
     params.fromToken,
