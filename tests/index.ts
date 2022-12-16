@@ -158,7 +158,7 @@ async function main() {
   }
 
   //await waiting(config.waitTime);
-  await waiting(1);
+  await waiting(config.waitTime);
   let index = activeRoutes.length;
   while (index--) {
     //TODO add timeout
