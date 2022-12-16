@@ -10,23 +10,34 @@ import {
 import winston from "winston";
 
 const logger = winston.createLogger({
+  format: winston.format.json(),
   transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: "./logs/combined.log" }),
+    new winston.transports.Console({ level: "debug" }),
     new winston.transports.File({
-      filename: "./logs/error.log",
+      filename: "./logs/combined.json",
+      level: "debug",
+    }),
+    new winston.transports.File({
+      filename: "./logs/info.json",
+      level: "info",
+    }),
+    new winston.transports.File({
+      filename: "./logs/error.json",
       level: "error",
     }),
   ],
 });
 
+const date = new Date();
 let activeRoutes: RouteLog[] = [];
 
 async function main() {
-  logger.info("");
-  logger.info("######################################################");
-  logger.info("############# Running batch transactions #############");
-  logger.info(`## env: ${process.argv.slice(2)[0]}`);
+  logger.error(
+    `-------------------- intentional line seperator for logs: ${date} ----------------------------`
+  );
+  logger.debug("######################################################");
+  logger.debug("############# Running batch transactions #############");
+  logger.debug(`## env: ${process.argv.slice(2)[0]}`);
 
   const config = await loadAsync("./config.yml", process.argv.slice(2)[0]); //TODO pass env in as an argument
   if (typeof config === undefined) {
@@ -41,7 +52,7 @@ async function main() {
 
   //get chain data
   const ethereum_chain = squidSdk.chains.find(
-    (chain) => chain.chainName == ChainName.ETHEREUM //TODO handle local and testnet
+    (chain) => chain.chainName == config.ethereum_chain_name //TODO handle local and testnet
   )!;
   const avalanche_chain = squidSdk.chains.find(
     (chain) => chain.chainName == ChainName.AVALANCHE
@@ -49,29 +60,31 @@ async function main() {
   const moonbeam_chain = squidSdk.chains.find(
     (chain) => chain.chainName == ChainName.MOONBEAM
   )!;
+  const polygon_chain = squidSdk.chains.find(
+    (chain) => chain.chainName == ChainName.POLYGON
+  )!;
 
   //set usdc trade amount
   const usdc_amount = ethers.utils
     .parseUnits(config.usdc_amount_in_ethers, 6)
     .toString();
 
-  //rpc and signer
-  let srcProvider = new ethers.providers.JsonRpcProvider(avalanche_chain.rpc);
-  let dstProvider = new ethers.providers.JsonRpcProvider(ethereum_chain.rpc);
-  let signer = new ethers.Wallet(config.private_key, srcProvider);
+  //get wallet for address
+  const wallet = new ethers.Wallet(config.private_key);
   //array of routes
 
-  //Ethereum
+  //Polygon
   let paramsArray = [
     {
-      routeDescription: "USDC on Ethereum to WAVAX on Avalanch",
-      srcRPC: ethereum_chain.rpc,
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      srcRPC: polygon_chain.rpc,
       dstRPC: avalanche_chain.rpc,
-      toAddress: signer.address,
-      fromChain: ethereum_chain.chainId,
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
       fromToken: squidSdk.tokens.find(
         (t) =>
-          t.symbol === config.usdcSymbol && t.chainId === ethereum_chain.chainId
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
       )!.address as string, //usdc
       fromAmount: usdc_amount,
       toChain: avalanche_chain.chainId,
@@ -82,12 +95,31 @@ async function main() {
     },
   ];
 
+  //Ethereum
+  paramsArray.push({
+    routeDescription: "USDC on Ethereum to WAVAX on Avalanch",
+    srcRPC: ethereum_chain.rpc,
+    dstRPC: avalanche_chain.rpc,
+    toAddress: wallet.address,
+    fromChain: ethereum_chain.chainId,
+    fromToken: squidSdk.tokens.find(
+      (t) =>
+        t.symbol === config.usdcSymbol && t.chainId === ethereum_chain.chainId
+    )!.address as string, //usdc
+    fromAmount: usdc_amount,
+    toChain: avalanche_chain.chainId,
+    toToken: squidSdk.tokens.find(
+      (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+    )!.address as string, //wavax
+    slippage: config.slippage,
+  });
+
   //From Avalanche
   paramsArray.push({
     routeDescription: "USDC on Avalanche to WETH on Ethereum",
     srcRPC: avalanche_chain.rpc,
     dstRPC: ethereum_chain.rpc,
-    toAddress: signer.address,
+    toAddress: wallet.address,
     fromChain: avalanche_chain.chainId,
     fromToken: squidSdk.tokens.find(
       (t) =>
@@ -107,7 +139,7 @@ async function main() {
     routeDescription: "USDC on Moonbeam to WAVAX on Avalanche",
     srcRPC: moonbeam_chain.rpc,
     dstRPC: avalanche_chain.rpc,
-    toAddress: signer.address,
+    toAddress: wallet.address,
     fromChain: moonbeam_chain.chainId,
     fromToken: squidSdk.tokens.find(
       (t) =>
@@ -127,21 +159,23 @@ async function main() {
     const activeRoute = await getPreAccountValuesAndExecute(
       params,
       config,
-      squidSdk
+      squidSdk,
+      logger
     );
     if (activeRoute.txOk === true) activeRoutes.push(activeRoute);
   }
 
-  await waiting(config.waitTime);
+  //await waiting(config.waitTime);
+  await waiting(1);
   let index = activeRoutes.length;
   while (index--) {
     //TODO add timeout
-    logger.info(`Number of active routes: ${activeRoutes.length}`);
+    logger.debug(`Number of active routes: ${activeRoutes.length}`);
     let routeLog = activeRoutes[index];
     const response = await squidSdk.getStatus({
       transactionId: routeLog.txReceiptId!,
     });
-    logger.info({
+    logger.debug({
       txid: routeLog.txReceiptId!,
       status: response.status,
       description: routeLog.params.routeDescription,
@@ -153,21 +187,27 @@ async function main() {
         config,
         routeLog
       );
-      logger.info("## Route complete");
       routeLog.routeSwapsSuccess =
         routeLog.srcTokenBalancePre!.gt(routeLog.srcTokenBalancePost!) &&
         routeLog.dstTokenBalancePre!.lt(routeLog.dstTokenBalancePost!);
 
       routeLog.routeSwapsSuccess
-        ? logger.info({ info: "## Route success" })
-        : logger.error({ info: "## Route failure" });
+        ? logger.info({ info: "## Route success", detail: routeLog })
+        : logger.error({
+            status: "## Route complete with dest swap failure",
+            detail: routeLog,
+          });
       activeRoutes.splice(index, 1);
     } else if (
       response.status === "error" ||
       response.status === "gas_unpaid" ||
       response.status === "gas_paid_not_enough_gas"
     ) {
-      logger.error(response.status);
+      logger.error({
+        status: "## Route failure",
+        axlResponse: response.status,
+        detail: routeLog,
+      });
       activeRoutes.splice(index, 1);
     }
   }

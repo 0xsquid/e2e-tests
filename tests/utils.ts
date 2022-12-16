@@ -1,13 +1,6 @@
 import { ethers, Contract, BigNumber } from "ethers";
-import { ChainName, RouteData, Squid } from "@0xsquid/sdk";
+import { Squid } from "@0xsquid/sdk";
 import winston from "winston";
-
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: "./logs/combined.log" }),
-  ],
-});
 
 export type RouteLog = {
   routeDescription?: string;
@@ -46,7 +39,8 @@ export async function waiting(waitTime: number) {
 export const getPreAccountValuesAndExecute = async (
   params: any,
   config: any,
-  squidSdk: Squid
+  squidSdk: Squid,
+  logger: winston.Logger
 ) => {
   const srcProvider = new ethers.providers.JsonRpcProvider(params.srcRPC);
   const dstProvider = new ethers.providers.JsonRpcProvider(params.dstRPC);
@@ -82,7 +76,11 @@ export const getPreAccountValuesAndExecute = async (
     };
     return routeLog as unknown as RouteLog;
   } catch (error) {
-    logger.error(error);
+    logger.error({
+      msg: "failure for tx on source chain",
+      error: error,
+      params: params,
+    });
     return { txOk: false };
   }
 };
