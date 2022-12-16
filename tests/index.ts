@@ -76,10 +76,11 @@ async function main() {
 
   //get wallet for address
   const wallet = new ethers.Wallet(config.private_key);
-  //array of routes
 
+  //array of routes
+  let paramsArray: any[] = [];
   //Polygon
-  let paramsArray = [
+  /* paramsArray.push(
     {
       routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
       toAddress: wallet.address,
@@ -111,8 +112,8 @@ async function main() {
           t.chainId === avalanche_chain.chainId
       )!.address as string, //wavax
       slippage: config.slippage,
-    },
-  ];
+    }
+  ); */
 
   //Ethereum
   paramsArray.push({
@@ -149,6 +150,22 @@ async function main() {
     slippage: config.slippage,
   });
 
+  // more from Avalanche
+  paramsArray.push({
+    routeDescription: "Avalanche AVAX to MATIC on Polygon",
+    toAddress: wallet.address,
+    fromChain: avalanche_chain.chainId,
+    fromToken: squidSdk.tokens.find(
+      (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+    )!.address as string, //usdc
+    fromAmount: token_amount,
+    toChain: polygon_chain.chainId,
+    toToken: squidSdk.tokens.find(
+      (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+    )!.address as string, //wavax
+    slippage: config.slippage,
+  });
+
   //From moonbeam
   paramsArray.push({
     routeDescription: "USDC on Moonbeam to WAVAX on Avalanche",
@@ -179,7 +196,7 @@ async function main() {
   }
 
   //await waiting(config.waitTime);
-  await waiting(config.waitTime);
+  await waiting(config.waitTime * 3);
   let index = activeRoutes.length;
   while (index--) {
     //TODO add timeout
@@ -225,5 +242,6 @@ async function main() {
       activeRoutes.splice(index, 1);
     }
   }
+  console.log("finished");
 }
 main();
