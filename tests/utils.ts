@@ -63,9 +63,8 @@ export const getPreAccountValuesAndExecute = async (
     signer.address
   );
 
-  const { route } = await squidSdk.getRoute(params);
-
   try {
+    const { route } = await squidSdk.getRoute(params);
     const tx = await squidSdk.executeRoute({
       signer,
       route,

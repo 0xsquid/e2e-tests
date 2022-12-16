@@ -2,16 +2,27 @@
 default:
   slippage: 20 # as a percentage 20 = 20%
 local:
-  api_url: "http://localhost:3000"
-  axlUsdcSymbol: "axlUSDC"
-  usdcSymbol: "USDC"
+  api_url: "http://localhost:3000"  #squid api
+  axlUsdcSymbol: "axlUSDC"          #axelar bridge token
+  usdcSymbol: "USDC"                #cononical usdc token
   private_key: ""
-  usdc_amount_in_ethers: "25"
-  waitTime: 1000
+  usdc_amount_in_ethers: "25"       #when doing a bridgeCall this is the send amount
+  token_amount_in_ethers: "1"       #any token that is not usdc, will need fine turning for some tokens
+  waitTime: 1000                    #give time for axelar to index events before checking status
 testnet:
   api_url: "https://testnet.api.0xsquid.com"
   axlUsdcSymbol: "aUSDC"
   usdcSymbol: "aUSDC"
   private_key: ""
   usdc_amount_in_ethers: "1"
+  token_amount_in_ethers: "0.01"
   waitTime: 10000
+mainnet:
+  api_url: "https://api.0xsquid.com"
+  axlUsdcSymbol: "axlUSDC"
+  usdcSymbol: "USDC"
+  private_key: ""
+  usdc_amount_in_ethers: "1"
+  token_amount_in_ethers: "0.01"
+  waitTime: 10000
+

@@ -12,7 +12,7 @@ import winston from "winston";
 const logger = winston.createLogger({
   format: winston.format.json(),
   transports: [
-    new winston.transports.Console({ level: "debug" }),
+    new winston.transports.Console({ level: "error" }),
     new winston.transports.File({
       filename: "./logs/combined.json",
       level: "debug",
@@ -69,6 +69,11 @@ async function main() {
     .parseUnits(config.usdc_amount_in_ethers, 6)
     .toString();
 
+  //set token trade amount
+  const token_amount = ethers.utils
+    .parseUnits(config.token_amount_in_ethers, 18)
+    .toString();
+
   //get wallet for address
   const wallet = new ethers.Wallet(config.private_key);
   //array of routes
@@ -88,6 +93,22 @@ async function main() {
       toChain: avalanche_chain.chainId,
       toToken: squidSdk.tokens.find(
         (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "callBridge: WMATIC on Polygon to USDC on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WMATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: token_amount,
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === avalanche_chain.chainId
       )!.address as string, //wavax
       slippage: config.slippage,
     },
