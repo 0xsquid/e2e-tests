@@ -9,6 +9,7 @@ local:
   usdc_amount_in_ethers: "25"       #when doing a bridgeCall this is the send amount
   token_amount_in_ethers: "1"       #any token that is not usdc, will need fine turning for some tokens
   waitTime: 1000                    #give time for axelar to index events before checking status
+  ethereum_chain_name: Ethereum
 testnet:
   api_url: "https://testnet.api.0xsquid.com"
   axlUsdcSymbol: "aUSDC"
@@ -17,6 +18,7 @@ testnet:
   usdc_amount_in_ethers: "1"
   token_amount_in_ethers: "0.01"
   waitTime: 10000
+  ethereum_chain_name: Ethereum-2
 mainnet:
   api_url: "https://api.0xsquid.com"
   axlUsdcSymbol: "axlUSDC"
@@ -25,4 +27,4 @@ mainnet:
   usdc_amount_in_ethers: "1"
   token_amount_in_ethers: "0.01"
   waitTime: 10000
-
+  ethereum_chain_name: Ethereum
