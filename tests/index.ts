@@ -12,7 +12,7 @@ import winston from "winston";
 const logger = winston.createLogger({
   format: winston.format.json(),
   transports: [
-    new winston.transports.Console({ level: "error" }),
+    new winston.transports.Console({ level: "info" }),
     new winston.transports.File({
       filename: "./logs/combined.json",
       level: "debug",
@@ -80,7 +80,7 @@ async function main() {
   //array of routes
   let paramsArray: any[] = [];
   //Polygon
-  /* paramsArray.push(
+  paramsArray.push(
     {
       routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
       toAddress: wallet.address,
@@ -102,7 +102,7 @@ async function main() {
       toAddress: wallet.address,
       fromChain: polygon_chain.chainId,
       fromToken: squidSdk.tokens.find(
-        (t) => t.symbol === "WMATIC" && t.chainId === polygon_chain.chainId
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
       )!.address as string, //usdc
       fromAmount: token_amount,
       toChain: avalanche_chain.chainId,
@@ -113,10 +113,10 @@ async function main() {
       )!.address as string, //wavax
       slippage: config.slippage,
     }
-  ); */
+  );
 
   //Ethereum
-  paramsArray.push({
+  /* paramsArray.push({
     routeDescription: "USDC on Ethereum to WAVAX on Avalanch",
     toAddress: wallet.address,
     fromChain: ethereum_chain.chainId,
@@ -182,10 +182,11 @@ async function main() {
       (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
     )!.address as string, //wavax
     slippage: config.slippage,
-  });
+  }); */
 
   //get pre tx account values and then execute route
   for await (const params of paramsArray) {
+    logger.info(`Running for: ${params.routeDescription}`);
     const activeRoute = await getPreAccountValuesAndExecute(
       params,
       config,
