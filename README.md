@@ -5,7 +5,7 @@
 - run `yarn install`
 - copy config.yml.example to config.yml
 - update config.yml with private key
-- to run `yarn run <local> | <testnet>`
+- to run `yarn run <local> | <testnet> | <mainnet>`
 - eg `yarn run testnet`
 - log are output to the /logs directory. errors are in error.log
 
