@@ -137,7 +137,7 @@ async function main() {
       fromToken: squidSdk.tokens.find(
         (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
       )!.address as string, //usdc
-      fromAmount: usdc_amount,
+      fromAmount: ethers.utils.parseEther("0.083"), //$1
       toChain: polygon_chain.chainId,
       toToken: squidSdk.tokens.find(
         (t) =>
@@ -153,7 +153,7 @@ async function main() {
       fromToken: squidSdk.tokens.find(
         (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
       )!.address as string, //usdc
-      fromAmount: token_amount,
+      fromAmount: ethers.utils.parseEther("0.083"),
       toChain: polygon_chain.chainId,
       toToken: squidSdk.tokens.find(
         (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
@@ -162,20 +162,35 @@ async function main() {
     },
   ];
 
-  const ethereum = [
+  const ethereumToPolygon = [
     {
-      routeDescription: "USDC on Avalanche to WETH on Ethereum",
+      routeDescription: "USDC on Ethereum to MATIC on Polygon",
       toAddress: wallet.address,
-      fromChain: avalanche_chain.chainId,
+      fromChain: ethereum_chain.chainId,
       fromToken: squidSdk.tokens.find(
         (t) =>
-          t.symbol === config.axlUsdcSymbol &&
-          t.chainId === avalanche_chain.chainId
+          t.symbol === config.usdcSymbol && t.chainId === ethereum_chain.chainId
       )!.address as string, //usdc
-      fromAmount: usdc_amount,
-      toChain: ethereum_chain.chainId,
+      fromAmount: ethers.utils.parseUnits("70", 6).toString(),
+      toChain: polygon_chain.chainId,
       toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "WETH" && t.chainId === ethereum_chain.chainId
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "ETH on Ethereum to axlUSDC on Polygon",
+      toAddress: wallet.address,
+      fromChain: ethereum_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) => t.symbol === "ETH" && t.chainId === ethereum_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.005", 18).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
       )!.address as string, //wavax
       slippage: config.slippage,
     },
@@ -216,8 +231,8 @@ async function main() {
       paramsArray.push(...avalancheToPolygon);
       break;
 
-    case "ethereum":
-      paramsArray.push(ethereum);
+    case "ethereum-polygon":
+      paramsArray.push(...ethereumToPolygon);
       break;
     case "moonbeam":
       paramsArray.push(moonbeam);
@@ -239,11 +254,11 @@ async function main() {
     if (activeRoute.txOk === true) activeRoutes.push(activeRoute);
   }
 
-  await waiting(20000);
+  await waiting(10000);
   let index = activeRoutes.length;
   while (index--) {
     //TODO add timeout
-    waiting(500);
+    waiting(1000);
     logger.debug(`Number of active routes: ${activeRoutes.length}`);
     let routeLog = activeRoutes[index];
 
