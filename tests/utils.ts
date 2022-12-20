@@ -1,6 +1,8 @@
 import { ethers, Contract, BigNumber } from "ethers";
-import { Squid } from "@0xsquid/sdk";
+import { ChainName, Squid } from "@0xsquid/sdk";
 import winston from "winston";
+import axios from "axios";
+import { parseTransactionRequest } from "@0xsquid/sdk/dist/0xsquid/v1/route";
 
 export type RouteLog = {
   routeDescription?: string;
@@ -63,11 +65,18 @@ export const getPreAccountValuesAndExecute = async (
     signer.address
   );
 
+  const gasParams = await getGasFees();
+
   try {
     const { route } = await squidSdk.getRoute(params);
     const tx = await squidSdk.executeRoute({
       signer,
       route,
+      overrides:
+        squidSdk.chains.find((chain) => chain.chainId == params.toChain)!
+          .chainName == ChainName.POLYGON
+          ? gasParams
+          : undefined,
     });
     const txReceipt = await tx.wait(1);
 
@@ -118,3 +127,26 @@ export const getPostAccountValues = async (
 
   return routeLog;
 };
+
+async function getGasFees() {
+  let gas = {
+    maxFeePerGas: ethers.BigNumber.from(40000000000),
+    maxPriorityFeePerGas: ethers.BigNumber.from(40000000000),
+    gasPrice: undefined,
+  };
+  try {
+    const { data } = await axios({
+      method: "get",
+      url: "https://gasstation-mainnet.matic.network/v2",
+    });
+    gas.maxFeePerGas = parse(data.fast.maxFee);
+    gas.maxPriorityFeePerGas = parse(data.fast.maxPriorityFee);
+    console.log(gas.maxFeePerGas.toNumber());
+    console.log(gas.maxPriorityFeePerGas.toNumber());
+  } catch (error) {}
+  return gas;
+}
+
+function parse(data: number) {
+  return ethers.utils.parseUnits(Math.ceil(data) + "", "gwei");
+}
