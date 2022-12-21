@@ -48,20 +48,8 @@ export const getPreAccountValuesAndExecute = async (
   )!.rpc;
 
   const srcProvider = new ethers.providers.JsonRpcProvider(srcRPC);
-  const dstProvider = new ethers.providers.JsonRpcProvider(dstRPC);
+
   const signer = new ethers.Wallet(config.private_key, srcProvider);
-  //get before on src
-  const srcTokenBalancePre = await getTokenBalance(
-    params.fromToken,
-    srcProvider,
-    signer.address
-  );
-  //get before on dst
-  const dstTokenBalancePre = await getTokenBalance(
-    params.toToken,
-    dstProvider,
-    signer.address
-  );
 
   try {
     const { route } = await squidSdk.getRoute(params);
@@ -73,8 +61,6 @@ export const getPreAccountValuesAndExecute = async (
 
     const routeLog = {
       txReceiptId: txReceipt.transactionHash,
-      srcTokenBalancePre,
-      dstTokenBalancePre,
       params,
       txOk: true,
     };
@@ -95,26 +81,5 @@ export const getPostAccountValues = async (
   routeLog: RouteLog,
   squidSdk: Squid
 ) => {
-  const srcRPC = squidSdk.chains.find(
-    (chain) => chain.chainId == params.fromChain
-  )!.rpc;
-  const dstRPC = squidSdk.chains.find(
-    (chain) => chain.chainId == params.toChain
-  )!.rpc;
-  const srcProvider = new ethers.providers.JsonRpcProvider(srcRPC);
-  const dstProvider = new ethers.providers.JsonRpcProvider(dstRPC);
-  const signer = new ethers.Wallet(config.private_key, srcProvider);
-  routeLog.srcTokenBalancePost = await getTokenBalance(
-    params.fromToken,
-    srcProvider,
-    signer.address
-  );
-
-  routeLog.dstTokenBalancePost = await getTokenBalance(
-    params.toToken,
-    dstProvider,
-    signer.address
-  );
-
   return routeLog;
 };

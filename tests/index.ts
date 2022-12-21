@@ -735,6 +735,7 @@ async function main() {
       break;
     case "polygon-polygon":
       paramsArray.push(...polygonToPolygon);
+      paramsArray.push(...polygonToPolygon);
       break;
     default:
       paramsArray.push(polygonToAvalanche);
@@ -789,16 +790,9 @@ async function main() {
         routeLog,
         squidSdk
       );
-      routeLog.routeSwapsSuccess =
-        routeLog.srcTokenBalancePre!.gt(routeLog.srcTokenBalancePost!) &&
-        routeLog.dstTokenBalancePre!.lt(routeLog.dstTokenBalancePost!);
 
-      routeLog.routeSwapsSuccess
-        ? logger.info({ info: "## Route success", detail: routeLog })
-        : logger.error({
-            status: "## Route complete with dest swap failure",
-            detail: routeLog,
-          });
+      logger.info({ info: "## Route finished", detail: routeLog });
+
       activeRoutes.splice(index, 1);
     } else if (
       response.status === "error" ||
