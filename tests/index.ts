@@ -78,6 +78,170 @@ async function main() {
   const wallet = new ethers.Wallet(config.private_key);
 
   //use cases
+  const polygonToPolygon = [
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+  ];
+
+  //use cases
   const polygonToAvalanche = [
     {
       routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
@@ -88,7 +252,7 @@ async function main() {
           t.symbol === config.axlUsdcSymbol &&
           t.chainId === polygon_chain.chainId
       )!.address as string, //usdc
-      fromAmount: usdc_amount,
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
       toChain: avalanche_chain.chainId,
       toToken: squidSdk.tokens.find(
         (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
@@ -96,13 +260,317 @@ async function main() {
       slippage: config.slippage,
     },
     {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to AVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "bridgeCall: axlUSDC on polygon to WAVAX on Avalanche",
+      toAddress: wallet.address,
+      fromChain: polygon_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
+      toChain: avalanche_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    /*  {
       routeDescription: "callBridge: MATIC on Polygon to axlUSDC on Avalanche",
       toAddress: wallet.address,
       fromChain: polygon_chain.chainId,
       fromToken: squidSdk.tokens.find(
         (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
       )!.address as string, //usdc
-      fromAmount: token_amount,
+      fromAmount: ethers.utils.parseUnits("0.5", 18).toString(),
       toChain: avalanche_chain.chainId,
       toToken: squidSdk.tokens.find(
         (t) =>
@@ -110,7 +578,7 @@ async function main() {
           t.chainId === avalanche_chain.chainId
       )!.address as string, //wavax
       slippage: config.slippage,
-    },
+    }, */
   ];
 
   const avalancheToPolygon = [
@@ -123,7 +591,7 @@ async function main() {
           t.symbol === config.axlUsdcSymbol &&
           t.chainId === avalanche_chain.chainId
       )!.address as string, //usdc
-      fromAmount: usdc_amount,
+      fromAmount: ethers.utils.parseUnits("0.1", 6).toString(),
       toChain: polygon_chain.chainId,
       toToken: squidSdk.tokens.find(
         (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
@@ -137,7 +605,7 @@ async function main() {
       fromToken: squidSdk.tokens.find(
         (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
       )!.address as string, //usdc
-      fromAmount: ethers.utils.parseEther("0.083"), //$1
+      fromAmount: ethers.utils.parseEther("0.083").toString(), //$1
       toChain: polygon_chain.chainId,
       toToken: squidSdk.tokens.find(
         (t) =>
@@ -153,11 +621,27 @@ async function main() {
       fromToken: squidSdk.tokens.find(
         (t) => t.symbol === "AVAX" && t.chainId === avalanche_chain.chainId
       )!.address as string, //usdc
-      fromAmount: ethers.utils.parseEther("0.083"),
+      fromAmount: ethers.utils.parseEther("0.083").toString(),
       toChain: polygon_chain.chainId,
       toToken: squidSdk.tokens.find(
         (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
       )!.address as string, //wavax
+      slippage: config.slippage,
+    },
+    {
+      routeDescription: "WAVAX on Avalanche to axlUSDC on Polygon",
+      toAddress: wallet.address,
+      fromChain: avalanche_chain.chainId,
+      fromToken: squidSdk.tokens.find(
+        (t) => t.symbol === "WAVAX" && t.chainId === avalanche_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseEther("0.083").toString(), //$1
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
+        (t) =>
+          t.symbol === config.axlUsdcSymbol &&
+          t.chainId === polygon_chain.chainId
+      )!.address as string,
       slippage: config.slippage,
     },
   ];
@@ -225,17 +709,32 @@ async function main() {
   switch (sourceChainUseCases) {
     case "polygon-avalanche":
       paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
       break;
 
     case "avalanche-polygon":
+      paramsArray.push(...avalancheToPolygon);
+      paramsArray.push(...avalancheToPolygon);
+      paramsArray.push(...avalancheToPolygon);
+      paramsArray.push(...avalancheToPolygon);
       paramsArray.push(...avalancheToPolygon);
       break;
 
     case "ethereum-polygon":
       paramsArray.push(...ethereumToPolygon);
       break;
-    case "moonbeam":
-      paramsArray.push(moonbeam);
+    case "polygon-polygon":
+      paramsArray.push(...polygonToPolygon);
       break;
     default:
       paramsArray.push(polygonToAvalanche);
