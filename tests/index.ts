@@ -1,12 +1,7 @@
 import { BigNumber, ethers } from "ethers";
 import { ChainName, Squid } from "@0xsquid/sdk";
 import { loadAsync } from "node-yaml-config";
-import {
-  RouteLog,
-  getPreAccountValuesAndExecute,
-  getPostAccountValues,
-  waiting,
-} from "./utils";
+import { RouteLog, executeRoute, waiting } from "./utils";
 import winston from "winston";
 
 const logger = winston.createLogger({
@@ -63,6 +58,9 @@ async function main() {
   const polygon_chain = squidSdk.chains.find(
     (chain) => chain.chainName == ChainName.POLYGON
   )!;
+  const arbitrum_chain = squidSdk.chains.find(
+    (chain) => chain.chainName == ChainName.ARBITRUM
+  )!;
 
   //set usdc trade amount
   const usdc_amount = ethers.utils
@@ -96,23 +94,26 @@ async function main() {
       slippage: config.slippage,
     },
     {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      routeDescription: "callBridge: MATIC on polygon to axlUSDC on Polygon",
       toAddress: wallet.address,
       fromChain: polygon_chain.chainId,
       fromToken: squidSdk.tokens.find(
+        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+      )!.address as string, //usdc
+      fromAmount: ethers.utils.parseUnits("0.5", 18).toString(),
+      toChain: polygon_chain.chainId,
+      toToken: squidSdk.tokens.find(
         (t) =>
           t.symbol === config.axlUsdcSymbol &&
           t.chainId === polygon_chain.chainId
-      )!.address as string, //usdc
-      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
-      toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
       )!.address as string, //wavax
       slippage: config.slippage,
     },
+  ];
+
+  const polygonToMoonbeam = [
     {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      routeDescription: "bridgeCall: axlUSDC on polygon to GMLR on Moonbeam",
       toAddress: wallet.address,
       fromChain: polygon_chain.chainId,
       fromToken: squidSdk.tokens.find(
@@ -121,14 +122,16 @@ async function main() {
           t.chainId === polygon_chain.chainId
       )!.address as string, //usdc
       fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
+      toChain: moonbeam_chain.chainId,
       toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+        (t) => t.symbol === "GLMR" && t.chainId === moonbeam_chain.chainId
       )!.address as string, //wavax
       slippage: config.slippage,
     },
+  ];
+  const polygonToArbitrum = [
     {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
+      routeDescription: "bridgeCall: axlUSDC on polygon to GMLR on Moonbeam",
       toAddress: wallet.address,
       fromChain: polygon_chain.chainId,
       fromToken: squidSdk.tokens.find(
@@ -137,105 +140,9 @@ async function main() {
           t.chainId === polygon_chain.chainId
       )!.address as string, //usdc
       fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
+      toChain: arbitrum_chain.chainId,
       toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
-      )!.address as string, //wavax
-      slippage: config.slippage,
-    },
-    {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
-      toAddress: wallet.address,
-      fromChain: polygon_chain.chainId,
-      fromToken: squidSdk.tokens.find(
-        (t) =>
-          t.symbol === config.axlUsdcSymbol &&
-          t.chainId === polygon_chain.chainId
-      )!.address as string, //usdc
-      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
-      toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
-      )!.address as string, //wavax
-      slippage: config.slippage,
-    },
-    {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
-      toAddress: wallet.address,
-      fromChain: polygon_chain.chainId,
-      fromToken: squidSdk.tokens.find(
-        (t) =>
-          t.symbol === config.axlUsdcSymbol &&
-          t.chainId === polygon_chain.chainId
-      )!.address as string, //usdc
-      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
-      toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
-      )!.address as string, //wavax
-      slippage: config.slippage,
-    },
-    {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
-      toAddress: wallet.address,
-      fromChain: polygon_chain.chainId,
-      fromToken: squidSdk.tokens.find(
-        (t) =>
-          t.symbol === config.axlUsdcSymbol &&
-          t.chainId === polygon_chain.chainId
-      )!.address as string, //usdc
-      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
-      toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
-      )!.address as string, //wavax
-      slippage: config.slippage,
-    },
-    {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
-      toAddress: wallet.address,
-      fromChain: polygon_chain.chainId,
-      fromToken: squidSdk.tokens.find(
-        (t) =>
-          t.symbol === config.axlUsdcSymbol &&
-          t.chainId === polygon_chain.chainId
-      )!.address as string, //usdc
-      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
-      toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
-      )!.address as string, //wavax
-      slippage: config.slippage,
-    },
-    {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
-      toAddress: wallet.address,
-      fromChain: polygon_chain.chainId,
-      fromToken: squidSdk.tokens.find(
-        (t) =>
-          t.symbol === config.axlUsdcSymbol &&
-          t.chainId === polygon_chain.chainId
-      )!.address as string, //usdc
-      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
-      toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
-      )!.address as string, //wavax
-      slippage: config.slippage,
-    },
-    {
-      routeDescription: "bridgeCall: axlUSDC on polygon to MATIC on Polygon",
-      toAddress: wallet.address,
-      fromChain: polygon_chain.chainId,
-      fromToken: squidSdk.tokens.find(
-        (t) =>
-          t.symbol === config.axlUsdcSymbol &&
-          t.chainId === polygon_chain.chainId
-      )!.address as string, //usdc
-      fromAmount: ethers.utils.parseUnits("0.5", 6).toString(),
-      toChain: polygon_chain.chainId,
-      toToken: squidSdk.tokens.find(
-        (t) => t.symbol === "MATIC" && t.chainId === polygon_chain.chainId
+        (t) => t.symbol === "ETH" && t.chainId === arbitrum_chain.chainId
       )!.address as string, //wavax
       slippage: config.slippage,
     },
@@ -709,27 +616,10 @@ async function main() {
   switch (sourceChainUseCases) {
     case "polygon-avalanche":
       paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
-      paramsArray.push(...polygonToAvalanche);
       break;
-
     case "avalanche-polygon":
       paramsArray.push(...avalancheToPolygon);
-      paramsArray.push(...avalancheToPolygon);
-      paramsArray.push(...avalancheToPolygon);
-      paramsArray.push(...avalancheToPolygon);
-      paramsArray.push(...avalancheToPolygon);
       break;
-
     case "ethereum-polygon":
       paramsArray.push(...ethereumToPolygon);
       break;
@@ -737,24 +627,51 @@ async function main() {
       paramsArray.push(...polygonToPolygon);
       paramsArray.push(...polygonToPolygon);
       break;
+    case "polygon-moonbeam":
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      paramsArray.push(...polygonToMoonbeam);
+      break;
+
+    case "polygon-arbitrum":
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
+      paramsArray.push(...polygonToArbitrum);
     default:
-      paramsArray.push(polygonToAvalanche);
+      paramsArray.push(...polygonToAvalanche);
       break;
   }
 
   //get pre tx account values and then execute route
   for await (const params of paramsArray) {
     logger.info(`Running for: ${params.routeDescription}`);
-    const activeRoute = await getPreAccountValuesAndExecute(
-      params,
-      config,
-      squidSdk,
-      logger
-    );
-    if (activeRoute.txOk === true) activeRoutes.push(activeRoute);
+    const activeRoute = await executeRoute(params, config, squidSdk, logger);
+    if (activeRoute.txOk === true) {
+      activeRoutes.push(activeRoute);
+      logger.info(`Successful source tx for: ${params.routeDescription}`);
+    }
   }
 
-  await waiting(10000);
+  await waiting(5000);
   let index = activeRoutes.length;
   while (index--) {
     //TODO add timeout
@@ -768,7 +685,7 @@ async function main() {
         transactionId: routeLog.txReceiptId!,
       });
     } catch (error: any) {
-      logger.error(
+      logger.debug(
         `${error.errorType} for ${routeLog.txReceiptId} - probably not indexed by axelar yet`
       );
       if (index === 0 && activeRoutes.length > 0) {
@@ -783,16 +700,22 @@ async function main() {
       description: routeLog.params.routeDescription,
     });
     if (response.status === "destination_executed") {
-      await waiting(config.waitTime);
-      activeRoutes[index] = await getPostAccountValues(
-        routeLog.params,
-        config,
-        routeLog,
-        squidSdk
-      );
-
-      logger.info({ info: "## Route finished", detail: routeLog });
-
+      if (
+        typeof response.toChain!.callEventStatus != undefined &&
+        response.toChain!.callEventStatus === "CrossMulticallExecuted"
+      ) {
+        logger.info({
+          info: "## Route finished - successful swap/send on destination chain",
+          detail: routeLog,
+          axlResponse: response.status,
+        });
+      } else {
+        logger.info({
+          info: "## Route finished - but something went wrong",
+          detail: routeLog,
+          axlResponse: response.status,
+        });
+      }
       activeRoutes.splice(index, 1);
     } else if (
       response.status === "error" ||
@@ -808,7 +731,6 @@ async function main() {
     }
     if (index === 0 && activeRoutes.length > 0) {
       index = activeRoutes.length;
-      await waiting(10000);
     }
   }
   logger.info("########### - finished");

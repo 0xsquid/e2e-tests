@@ -5,36 +5,16 @@ import winston from "winston";
 export type RouteLog = {
   routeDescription?: string;
   txReceiptId?: string;
-  srcTokenBalancePre?: BigNumber;
-  srcTokenBalancePost?: BigNumber;
-  dstTokenBalancePre?: BigNumber;
-  dstTokenBalancePost?: BigNumber;
   params?: any;
   routeSwapsSuccess?: boolean;
   txOk?: boolean;
 };
 
-export async function getTokenBalance(
-  tokenAddress: string,
-  provider: ethers.providers.JsonRpcProvider,
-  address: string
-): Promise<BigNumber> {
-  let balance: BigNumber;
-  const erc20Abi = require("./abi/erc20.json");
-  const tokenContract = new Contract(tokenAddress, erc20Abi, provider);
-  if (tokenAddress === "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE") {
-    balance = await provider.getBalance(address);
-  } else {
-    balance = await tokenContract.balanceOf(address);
-  }
-  return BigNumber.from(balance.toString());
-}
-
 export async function waiting(waitTime: number) {
   await new Promise((resolve) => setTimeout(resolve, waitTime));
 }
 
-export const getPreAccountValuesAndExecute = async (
+export const executeRoute = async (
   params: any,
   config: any,
   squidSdk: Squid,
@@ -43,21 +23,23 @@ export const getPreAccountValuesAndExecute = async (
   const srcRPC = squidSdk.chains.find(
     (chain) => chain.chainId == params.fromChain
   )!.rpc;
-  const dstRPC = squidSdk.chains.find(
-    (chain) => chain.chainId == params.toChain
-  )!.rpc;
-
   const srcProvider = new ethers.providers.JsonRpcProvider(srcRPC);
-
   const signer = new ethers.Wallet(config.private_key, srcProvider);
+
+  srcProvider.getTransactionCount(signer.address).then((nonce) => {});
 
   try {
     const { route } = await squidSdk.getRoute(params);
     const tx = await squidSdk.executeRoute({
       signer,
       route,
+      overrides: {
+        maxPriorityFeePerGas: BigNumber.from(75000000000),
+        maxFeePerGas: BigNumber.from(100000000000),
+      },
     });
-    const txReceipt = await tx.wait(1);
+    const txReceipt = await tx.wait(6);
+    console.log(txReceipt.blockNumber);
 
     const routeLog = {
       txReceiptId: txReceipt.transactionHash,
@@ -73,13 +55,4 @@ export const getPreAccountValuesAndExecute = async (
     });
     return { txOk: false };
   }
-};
-
-export const getPostAccountValues = async (
-  params: any,
-  config: any,
-  routeLog: RouteLog,
-  squidSdk: Squid
-) => {
-  return routeLog;
 };
