@@ -26,20 +26,20 @@ export const executeRoute = async (
   const srcProvider = new ethers.providers.JsonRpcProvider(srcRPC);
   const signer = new ethers.Wallet(config.private_key, srcProvider);
 
-  srcProvider.getTransactionCount(signer.address).then((nonce) => {});
-
   try {
+    logger.debug(`getting route for: ${params.routeDescription}`);
     const { route } = await squidSdk.getRoute(params);
+    logger.debug(`executing route for: ${params.routeDescription}`);
     const tx = await squidSdk.executeRoute({
       signer,
       route,
-      overrides: {
+      /* overrides: {
         maxPriorityFeePerGas: BigNumber.from(75000000000),
         maxFeePerGas: BigNumber.from(100000000000),
-      },
+      }, */
     });
     const txReceipt = await tx.wait(6);
-    console.log(txReceipt.blockNumber);
+    //console.log(txReceipt.blockNumber);
 
     const routeLog = {
       txReceiptId: txReceipt.transactionHash,
